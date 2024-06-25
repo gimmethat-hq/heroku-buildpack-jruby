@@ -59,7 +59,7 @@ function download() {
   fi
 
   echo "       java: Downloading $url"
-  status=$(curl -sL -f  -w "%{http_code}" -o /tmp/java.tar.gz $url)
+  status=$(curl -sL -f -w "%{http_code}" -o /tmp/java.tar.gz $url)
 
   if [[ $status -ge 300 ]]; then
     echo " !     java: Server returned HTTP $status"
