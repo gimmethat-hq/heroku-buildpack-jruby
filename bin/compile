@@ -133,4 +133,11 @@ export PATH=$JAVA_HOME/bin:$PATH
 export LD_LIBRARY_PATH=$JAVA_HOME/lib/server:$LD_LIBRARY_PATH
 EOF
 
+# Currently needed for later Ruby buildpack to check existence of java
+cat <<'EOF' > $BUILD_DIR/export
+export JAVA_HOME=$BUILD_DIR/vendor/java
+export PATH=$JAVA_HOME/bin:$PATH
+export LD_LIBRARY_PATH=$JAVA_HOME/lib/server:$LD_LIBRARY_PATH
+EOF
+
 echo "-----> java: Done"
