@@ -1,0 +1,125 @@
+#!/usr/bin/env bash
+# bin/compile <build-dir> <cache-dir> <env-dir>
+set -e
+
+# Parse params
+BUILD_DIR=$1
+CACHE_DIR=$2
+ENV_DIR=$3
+
+# Urls of different sources
+declare -A urls=(
+  ['semeru-22.0.1+8']='https://github.com/ibmruntimes/semeru22-binaries/releases/download/jdk-22.0.1%2B8_openj9-0.45.0/ibm-semeru-open-jdk_x64_linux_22.0.1_8_openj9-0.45.0.tar.gz'
+  ['zulu-22.0.1+8']='https://cdn.azul.com/zulu/bin/zulu22.30.13-ca-jdk22.0.1-linux_x64.tar.gz'
+)
+
+# SHA256 checksums of different sources
+declare -A checksums=(
+  ['semeru-22.0.1+8']='6e54d984bc0c058ffb7a604810dfffba210d79e12855e5c61e9295fedeff32db'
+  ['zulu-22.0.1+8']='993d91062c631d10508475f7b112724fa8136704ec1412d5cc1f93ddda1eddb0'
+)
+
+# Default version - for now
+version="zulu-22.0.1+8"
+
+# dest is the path in the application that java will be extracted to.
+dest="$BUILD_DIR/vendor/java"
+
+# bundle is the full path to the cached java binaries for this version.
+bundle=$CACHE_DIR/java/$version
+
+function download() {
+  url="${urls[$version]}"
+
+  # Disable exit on command failure so we can provide better error messages
+  set +e
+
+  if [[ -z $url ]]; then
+    echo " !     java: No url for version $version"
+    exit 1
+  fi
+
+  echo "       java: Downloading $url"
+  status=$(curl -sL -f  -w "%{http_code}" -o /tmp/java.tar.gz $url)
+
+  if [[ $status -ge 300 ]]; then
+    echo " !     java: Server returned HTTP $status"
+    exit 1
+  fi
+
+  # Fetch the checksum from checksums above.
+  checksum="${checksums[$version]}"
+
+  if [[ -z $checksum ]]; then
+    echo " !     java: No checksum for version $version"
+    exit 1
+  fi
+
+  # Verify the SHA256 checksum for the source
+  echo "$checksum /tmp/java.tar.gz" | sha256sum --status -c -
+
+  # Ensure the checksum passed
+  retVal=$?
+  if [[ $retVal -ne 0 ]]; then
+    echo " !     java: Downloaded source failed checksum"
+    exit $retVal
+  fi
+
+  # Reenable exit on failure
+  set -e
+}
+
+function compile() {
+  set +e
+
+  echo "       java: Compiling $version"
+  (
+    # Only applies to this sub-shell
+    set -e
+
+    # Logs for the sub-shell go to /tmp/jemalloc.log for printing in case of an
+    # error.
+    exec > /tmp/java.log 2>&1
+
+    # Extract straight to cached bundle
+    rm -rf $bundle && mkdir -p $bundle
+
+    # Extract the source 
+    tar --strip-components=1 -xf /tmp/java.tar.gz -C $bundle
+  )
+
+  retVal=$?
+  if [[ $retVal -ne 0 ]]; then
+    echo " !     java: Failed to compile java"
+    cat /tmp/java.log
+
+    exit $retVal
+  fi
+
+  # Reenable exit on failure
+  set -e
+}
+
+# Check if this version of java is in the cache and download it if it
+# doesn't exist.
+if [[ ! -d $bundle ]]; then
+  echo "-----> java: Installing $version from source"
+
+  download
+  compile
+else
+  echo "-----> java: Installing $version from cache"
+fi
+
+rm -rf $dest && mkdir -p $dest
+cp -r $bundle -T $dest/
+
+mkdir -p $BUILD_DIR/.profile.d
+
+cat <<'EOF' > $BUILD_DIR/.profile.d/java.sh
+export JAVA_HOME=$HOME/vendor/java
+export PATH=$JAVA_HOME/bin:$PATH
+export LD_LIBRARY_PATH=$JAVA_HOME/lib/server:$LD_LIBRARY_PATH
+EOF
+
+echo "-----> java: Done"
