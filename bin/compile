@@ -140,17 +140,17 @@ cp $root_dir/assets/* $dest_java_assets
 
 mkdir -p $BUILD_DIR/.profile.d
 
-cat <<'EOF' > $BUILD_DIR/.profile.d/java.sh
-export JAVA_HOME=$HOME/vendor/java
-export PATH=$JAVA_HOME/bin:$PATH
-export LD_LIBRARY_PATH=$JAVA_HOME/lib/server:$LD_LIBRARY_PATH
+cat > $BUILD_DIR/.profile.d/java.sh <<EOF
+export JAVA_HOME=\$HOME/vendor/java
+export PATH=\$JAVA_HOME/bin:\$PATH
+export LD_LIBRARY_PATH=\$JAVA_HOME/lib/server:\$LD_LIBRARY_PATH
 EOF
 
 # Currently needed for later Ruby buildpack to check existence of java
-cat <<'EOF' > $BUILD_DIR/export
-export JAVA_HOME="$BUILD_DIR/vendor/java"
-export PATH=$JAVA_HOME/bin:$PATH
-export LD_LIBRARY_PATH=$JAVA_HOME/lib/server:$LD_LIBRARY_PATH
+cat > $BUILD_DIR/export <<EOF
+export JAVA_HOME=$BUILD_DIR/vendor/java
+export PATH=\$JAVA_HOME/bin:\$PATH
+export LD_LIBRARY_PATH=\$JAVA_HOME/lib/server:\$LD_LIBRARY_PATH
 EOF
 
 echo "-----> java: Done"
