@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 # bin/compile <build-dir> <cache-dir> <env-dir>
+
+# testing:
+# rm -rf /vagrant/test && mkdir -p /vagrant/test/build /vagrant/test/cache /vagrant/test/env
+# ./bin/compile /vagrant/test/build /vagrant/test/cache /vagrant/test/env
+
 set -e
 
 # Parse params
@@ -22,8 +27,16 @@ declare -A checksums=(
 # NOTE Heroku java agent url, stored in assets
 # https://repo1.maven.org/maven2/com/heroku/agent/heroku-java-metrics-agent/4.0.2/heroku-java-metrics-agent-4.0.2.jar
 
-# Default version - for now
+# Default version
 version="zulu-22.0.1+8"
+
+# Read version from system.properties file if available
+if [ -f $BUILD_DIR/system.properties ]; then
+  version=$(cat $BUILD_DIR/system.properties | grep java.runtime.version | cut -d= -f2)
+  echo "-----> java: Using version $version from $BUILD_DIR/system.properties"
+else
+  echo "-----> java: Using version $version set as default fallback"
+fi
 
 # dest is the path in the application that java will be extracted to.
 dest="$BUILD_DIR/vendor/java"
