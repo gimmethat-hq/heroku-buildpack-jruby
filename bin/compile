@@ -11,6 +11,7 @@ set -e
 BUILD_DIR=$1
 CACHE_DIR=$2
 ENV_DIR=$3
+BUILDPACK_DIR=`readlink -f "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../"`
 
 # Urls of different sources
 declare -A urls=(
@@ -133,10 +134,9 @@ fi
 rm -rf $dest && mkdir -p $dest
 cp -r $bundle -T $dest/
 
-root_dir=`readlink -f "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../"`
 rm -rf $dest_java_assets && mkdir -p $dest_java_assets
 echo "-----> java: Installing common assets from buildpack folder"
-cp $root_dir/assets/* $dest_java_assets
+cp $BUILDPACK_DIR/assets/* $dest_java_assets
 
 mkdir -p $BUILD_DIR/.profile.d
 
@@ -147,7 +147,7 @@ export LD_LIBRARY_PATH=\$JAVA_HOME/lib/server:\$LD_LIBRARY_PATH
 EOF
 
 # Currently needed for later Ruby buildpack to check existence of java
-cat > $BUILD_DIR/export <<EOF
+cat > $BUILDPACK_DIR/export <<EOF
 export JAVA_HOME=$BUILD_DIR/vendor/java
 export PATH=\$JAVA_HOME/bin:\$PATH
 export LD_LIBRARY_PATH=\$JAVA_HOME/lib/server:\$LD_LIBRARY_PATH
