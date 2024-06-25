@@ -19,11 +19,17 @@ declare -A checksums=(
   ['zulu-22.0.1+8']='993d91062c631d10508475f7b112724fa8136704ec1412d5cc1f93ddda1eddb0'
 )
 
+# NOTE Heroku java agent url, stored in assets
+# https://repo1.maven.org/maven2/com/heroku/agent/heroku-java-metrics-agent/4.0.2/heroku-java-metrics-agent-4.0.2.jar
+
 # Default version - for now
 version="zulu-22.0.1+8"
 
 # dest is the path in the application that java will be extracted to.
 dest="$BUILD_DIR/vendor/java"
+
+# dest_java_assets is the path in the application that java-specific assets will be extracted to.
+dest_java_assets="$BUILD_DIR/vendor/java-assets"
 
 # bundle is the full path to the cached java binaries for this version.
 bundle=$CACHE_DIR/java/$version
@@ -113,6 +119,11 @@ fi
 
 rm -rf $dest && mkdir -p $dest
 cp -r $bundle -T $dest/
+
+root_dir=`readlink -f "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../"`
+rm -rf $dest_java_assets && mkdir -p $dest_java_assets
+echo "-----> java: Installing common assets from buildpack folder"
+cp $root_dir/assets/* $dest_java_assets
 
 mkdir -p $BUILD_DIR/.profile.d
 
