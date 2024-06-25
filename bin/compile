@@ -106,6 +106,9 @@ function compile() {
 
     # Extract the source 
     tar --strip-components=1 -xf /tmp/java.tar.gz -C $bundle
+
+    # Prune
+    rm -rf $bundle/demo $bundle/man $bundle/lib/src.zip
   )
 
   retVal=$?
