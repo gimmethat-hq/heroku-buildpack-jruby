@@ -18,7 +18,7 @@ if [ -f $BUILD_DIR/.ruby-version ]; then
   version=$(cat $BUILD_DIR/.ruby-version)
   echo "-----> jruby[ruby]: Using version $version from $BUILD_DIR/.ruby-version"
 else
-  echo " !     jruby[ruby]:: No version given in $BUILD_DIR/.ruby-version"
+  echo " !     jruby[ruby]: No version given in $BUILD_DIR/.ruby-version"
   exit 1
 fi
 
@@ -27,7 +27,7 @@ if [ -f $BUILD_DIR/.bundler-version ]; then
   bundler_version=$(cat $BUILD_DIR/.bundler-version)
   echo "-----> jruby[ruby]: Using bundler version $bundler_version from $BUILD_DIR/.bundler-version"
 else
-  echo " !     jruby[ruby]:: No bundler version given in $BUILD_DIR/.bundler-version"
+  echo " !     jruby[ruby]: No bundler version given in $BUILD_DIR/.bundler-version"
   exit 1
 fi
 
@@ -44,15 +44,15 @@ function download() {
   set +e
 
   if [[ -z $url ]]; then
-    echo " !     jruby[ruby]:: No url for version $version"
+    echo " !     jruby[ruby]: No url for version $version"
     exit 1
   fi
 
-  echo "       jruby[ruby]:: Downloading $url"
+  echo "       jruby[ruby]: Downloading $url"
   status=$(curl -sL -f -w "%{http_code}" -o /tmp/ruby.tar.gz $url)
 
   if [[ $status -ge 300 ]]; then
-    echo " !     jruby[ruby]:: Server returned HTTP $status"
+    echo " !     jruby[ruby]: Server returned HTTP $status"
     exit 1
   fi
 
@@ -60,7 +60,7 @@ function download() {
   checksum="${checksums[$version]}"
 
   if [[ -z $checksum ]]; then
-    echo " !     jruby[ruby]:: No checksum for version $version"
+    echo " !     jruby[ruby]: No checksum for version $version"
     exit 1
   fi
 
@@ -70,7 +70,7 @@ function download() {
   # Ensure the checksum passed
   retVal=$?
   if [[ $retVal -ne 0 ]]; then
-    echo " !     jruby[ruby]:: Downloaded source failed checksum"
+    echo " !     jruby[ruby]: Downloaded source failed checksum"
     exit $retVal
   fi
 
@@ -81,7 +81,7 @@ function download() {
 function compile() {
   set +e
 
-  echo "       jruby[ruby]:: Compiling $version"
+  echo "       jruby[ruby]: Compiling $version"
   (
     # Only applies to this sub-shell
     set -e
@@ -102,7 +102,7 @@ function compile() {
 
   retVal=$?
   if [[ $retVal -ne 0 ]]; then
-    echo " !     jruby[ruby]:: Failed to compile ruby"
+    echo " !     jruby[ruby]: Failed to compile ruby"
     cat /tmp/ruby.log
 
     exit $retVal
@@ -115,7 +115,7 @@ function compile() {
 function install_gems() {
   set +e
 
-  echo "       jruby[ruby]:: Installing gems"
+  echo "       jruby[ruby]: Installing gems"
   (
     # Only applies to this sub-shell
     set -e
@@ -143,7 +143,7 @@ function install_gems() {
 
   retVal=$?
   if [[ $retVal -ne 0 ]]; then
-    echo " !     jruby[ruby]:: Failed to install gems"
+    echo " !     jruby[ruby]: Failed to install gems"
     cat /tmp/gems.log
 
     exit $retVal
@@ -156,12 +156,12 @@ function install_gems() {
 # Check if this version of ruby is in the cache and download it if it
 # doesn't exist.
 if [[ ! -d $bundle ]]; then
-  echo "-----> jruby[ruby]:: Installing $version from source"
+  echo "-----> jruby[ruby] Installing $version from source"
 
   download
   compile
 else
-  echo "-----> jruby[ruby]:: Installing $version from cache"
+  echo "-----> jruby[ruby]: Installing $version from cache"
 fi
 
 rm -rf $dest && mkdir -p $dest
@@ -187,4 +187,4 @@ export BUNDLE_PATH=\$GEM_HOME
 export BUNDLE_DEPLOYMENT=1
 EOF
 
-echo "-----> jruby[ruby]:: Done"
+echo "-----> jruby[ruby]: Done"
