@@ -133,7 +133,7 @@ cp -r $bundle -T $dest/
 
 rm -rf $dest_java_assets && mkdir -p $dest_java_assets
 echo "-----> jruby[java]: Installing common assets from buildpack folder"
-cp $BUILDPACK_DIR/assets/* $dest_java_assets
+cp $BUILDPACK_DIR/java-assets/* $dest_java_assets
 
 mkdir -p $BUILD_DIR/.profile.d
 
