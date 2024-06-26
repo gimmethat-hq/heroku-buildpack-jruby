@@ -126,18 +126,16 @@ function install_gems() {
 
     # Ensure Ruby is on PATH
     PATH=$dest/bin:$PATH
+    gem install bundler -v $bundler_version --no-document
+
     # Nastiness of bundler --deployment: run from Ruby app root
     cd $BUILD_DIR
-    export GEM_HOME=$BUILD_DIR/vendor/bundle
-    export GEM_PATH=$GEM_HOME
-    export BUNDLE_BIN=$GEM_HOME/bin
-    export PATH=$BUNDLE_BIN:$PATH
     export BUNDLE_WITHOUT='development:test'
-    export BUNDLE_PATH=$GEM_HOME
+    export BUNDLE_PATH=$BUILD_DIR/vendor/bundle
+    export BUNDLE_BIN=$BUNDLE_PATH/bin
     export BUNDLE_DEPLOYMENT=1
 
-    rm -rf $GEM_HOME
-    gem install bundler -v $bundler_version --no-document
+    rm -rf $BUNDLE_PATH
     bundle install -j4
   )
 
@@ -175,16 +173,13 @@ install_gems
 
 mkdir -p $BUILD_DIR/.profile.d
 
-# NOTE $HOME/bin is first in PATH. Also, prior ruby symlink ensures that $HOME/bin scripts can reference
-# ruby, not jruby
+# NOTE $HOME/bin is first in PATH. Also, prior ruby symlink ensures that $HOME/bin scripts can reference ruby, not jruby
 cat > $BUILD_DIR/.profile.d/ruby.sh <<EOF
-export GEM_HOME=\$HOME/vendor/bundle
-export GEM_PATH=\$GEM_HOME
-export BUNDLE_BIN=\$GEM_HOME/bin
-export PATH=\$HOME/bin:\$BUNDLE_BIN:\$HOME/vendor/ruby/bin:\$PATH
-export BUNDLE_WITHOUT=development:test
-export BUNDLE_PATH=\$GEM_HOME
+export BUNDLE_WITHOUT='development:test'
+export BUNDLE_PATH=\$HOME/vendor/bundle
+export BUNDLE_BIN=\$BUNDLE_PATH/bin
 export BUNDLE_DEPLOYMENT=1
+export PATH=\$HOME/bin:\$BUNDLE_BIN:\$HOME/vendor/ruby/bin:\$PATH
 EOF
 
 echo "-----> jruby[ruby]: Done"
