@@ -13,15 +13,22 @@ declare -A checksums=(
   ['jruby-9.4.7.0']='f1c39f8257505300a528ff83fe4721fbe61a855abb25e3d27d52d43ac97a4d80'
 )
 
-# Default version
-version="jruby-9.4.7.0"
-
-# Read version from .ruby-version file if available
+# Read version from .ruby-version file
 if [ -f $BUILD_DIR/.ruby-version ]; then
-  version=$(cat $BUILD_DIR/.ruby-version | grep ruby)
+  version=$(cat $BUILD_DIR/.ruby-version)
   echo "-----> ruby: Using version $version from $BUILD_DIR/.ruby-version"
 else
-  echo "-----> ruby: Using version $version set as default fallback"
+  echo " !     jruby[ruby]:: No version given in $BUILD_DIR/.ruby-version"
+  exit 1
+fi
+
+# Read bundler version from .bundler-version file
+if [ -f $BUILD_DIR/.bundler-version ]; then
+  bundler_version=$(cat $BUILD_DIR/.bundler-version)
+  echo "-----> ruby: Using bundler version $bundler_version from $BUILD_DIR/.bundler-version"
+else
+  echo " !     jruby[ruby]:: No bundler version given in $BUILD_DIR/.bundler-version"
+  exit 1
 fi
 
 # dest is the path in the application that ruby will be extracted to.
@@ -79,7 +86,7 @@ function compile() {
     # Only applies to this sub-shell
     set -e
 
-    # Logs for the sub-shell go to /tmp/jemalloc.log for printing in case of an
+    # Logs for the sub-shell go to /tmp/blaa.log for printing in case of an
     # error.
     exec > /tmp/ruby.log 2>&1
 
@@ -105,6 +112,47 @@ function compile() {
   set -e
 }
 
+function install_gems() {
+  set +e
+
+  echo "       jruby[ruby]:: Installing gems"
+  (
+    # Only applies to this sub-shell
+    set -e
+
+    # Logs for the sub-shell go to /tmp/blaa.log for printing in case of an
+    # error.
+    exec > /tmp/gems.log 2>&1
+
+    # Ensure Ruby is on PATH
+    PATH=$dest/bin:$PATH
+    # Nastiness of bundler --deployment: run from Ruby app root
+    cd $BUILD_DIR
+    GEM_HOME=$BUILD_DIR/vendor/bundle
+    GEM_PATH=$GEM_HOME
+    BUNDLE_BIN=$GEM_HOME/bin
+    PATH=$BUNDLE_BIN:$PATH
+    BUNDLE_WITHOUT='development:test'
+    BUNDLE_PATH=$GEM_HOME
+    BUNDLE_DEPLOYMENT=1
+
+    rm -rf $GEM_HOME
+    gem install bundler -v $bundler_version --no-document
+    bundle install -j4
+  )
+
+  retVal=$?
+  if [[ $retVal -ne 0 ]]; then
+    echo " !     jruby[ruby]:: Failed to install gems"
+    # cat /tmp/gems.log
+
+    exit $retVal
+  fi
+
+  # Reenable exit on failure
+  set -e
+}
+
 # Check if this version of ruby is in the cache and download it if it
 # doesn't exist.
 if [[ ! -d $bundle ]]; then
@@ -121,19 +169,20 @@ cp -r $bundle -T $dest/
 # Create ruby symlink
 ln -s $dest/bin/jruby $dest/bin/ruby
 
-
+install_gems
 
 mkdir -p $BUILD_DIR/.profile.d
 
-#cat > $BUILD_DIR/.profile.d/ruby.sh <<EOF
-#export JAVA_HOME=\$HOME/vendor/java
-#export PATH=\$JAVA_HOME/bin:\$PATH
-#export LD_LIBRARY_PATH=\$JAVA_HOME/lib/server:\$LD_LIBRARY_PATH
-#EOF
+# NOTE $HOME/bin is first in PATH. Also, prior ruby symlink ensures that $HOME/bin scripts can reference
+# ruby, not jruby
+cat > $BUILD_DIR/.profile.d/ruby.sh <<EOF
+export GEM_HOME=\$HOME/vendor/bundle
+export GEM_PATH=\$GEM_HOME
+export BUNDLE_BIN=\$GEM_HOME/bin
+export PATH=\$HOME/bin:\$BUNDLE_BIN:\$HOME/vendor/ruby/bin:\$PATH
+export BUNDLE_WITHOUT=development:test
+export BUNDLE_PATH=\$GEM_HOME
+export BUNDLE_DEPLOYMENT=1
+EOF
 
 echo "-----> jruby[ruby]:: Done"
-
-echo "VARS"
-echo export JAVA_HOME=$JAVA_HOME
-echo export LD_LIBRARY_PATH=$LD_LIBRARY_PATH
-echo export PATH=$dest/bin:$PATH

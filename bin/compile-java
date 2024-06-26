@@ -91,7 +91,7 @@ function compile() {
     # Only applies to this sub-shell
     set -e
 
-    # Logs for the sub-shell go to /tmp/jemalloc.log for printing in case of an
+    # Logs for the sub-shell go to /tmp/blaa.log for printing in case of an
     # error.
     exec > /tmp/java.log 2>&1
 
