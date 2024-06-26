@@ -16,7 +16,7 @@ declare -A checksums=(
 # Read version from .ruby-version file
 if [ -f $BUILD_DIR/.ruby-version ]; then
   version=$(cat $BUILD_DIR/.ruby-version)
-  echo "-----> ruby: Using version $version from $BUILD_DIR/.ruby-version"
+  echo "-----> jruby[ruby]: Using version $version from $BUILD_DIR/.ruby-version"
 else
   echo " !     jruby[ruby]:: No version given in $BUILD_DIR/.ruby-version"
   exit 1
@@ -25,7 +25,7 @@ fi
 # Read bundler version from .bundler-version file
 if [ -f $BUILD_DIR/.bundler-version ]; then
   bundler_version=$(cat $BUILD_DIR/.bundler-version)
-  echo "-----> ruby: Using bundler version $bundler_version from $BUILD_DIR/.bundler-version"
+  echo "-----> jruby[ruby]: Using bundler version $bundler_version from $BUILD_DIR/.bundler-version"
 else
   echo " !     jruby[ruby]:: No bundler version given in $BUILD_DIR/.bundler-version"
   exit 1
@@ -122,19 +122,19 @@ function install_gems() {
 
     # Logs for the sub-shell go to /tmp/blaa.log for printing in case of an
     # error.
-    exec > /tmp/gems.log 2>&1
+    # exec > /tmp/gems.log 2>&1
 
     # Ensure Ruby is on PATH
     PATH=$dest/bin:$PATH
     # Nastiness of bundler --deployment: run from Ruby app root
     cd $BUILD_DIR
-    GEM_HOME=$BUILD_DIR/vendor/bundle
-    GEM_PATH=$GEM_HOME
-    BUNDLE_BIN=$GEM_HOME/bin
-    PATH=$BUNDLE_BIN:$PATH
-    BUNDLE_WITHOUT='development:test'
-    BUNDLE_PATH=$GEM_HOME
-    BUNDLE_DEPLOYMENT=1
+    export GEM_HOME=$BUILD_DIR/vendor/bundle
+    export GEM_PATH=$GEM_HOME
+    export BUNDLE_BIN=$GEM_HOME/bin
+    export PATH=$BUNDLE_BIN:$PATH
+    export BUNDLE_WITHOUT='development:test'
+    export BUNDLE_PATH=$GEM_HOME
+    export BUNDLE_DEPLOYMENT=1
 
     rm -rf $GEM_HOME
     gem install bundler -v $bundler_version --no-document
