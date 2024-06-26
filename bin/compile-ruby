@@ -1,0 +1,139 @@
+#!/usr/bin/env bash
+# bin/compile <build-dir> <cache-dir> <env-dir>
+
+set -e
+
+# Urls of different sources
+declare -A urls=(
+  ['jruby-9.4.7.0']='https://repo1.maven.org/maven2/org/jruby/jruby-dist/9.4.7.0/jruby-dist-9.4.7.0-bin.tar.gz'
+)
+
+# SHA256 checksums of different sources
+declare -A checksums=(
+  ['jruby-9.4.7.0']='f1c39f8257505300a528ff83fe4721fbe61a855abb25e3d27d52d43ac97a4d80'
+)
+
+# Default version
+version="jruby-9.4.7.0"
+
+# Read version from .ruby-version file if available
+if [ -f $BUILD_DIR/.ruby-version ]; then
+  version=$(cat $BUILD_DIR/.ruby-version | grep ruby)
+  echo "-----> ruby: Using version $version from $BUILD_DIR/.ruby-version"
+else
+  echo "-----> ruby: Using version $version set as default fallback"
+fi
+
+# dest is the path in the application that ruby will be extracted to.
+dest="$BUILD_DIR/vendor/ruby"
+
+# bundle is the full path to the cached ruby binaries for this version.
+bundle=$CACHE_DIR/ruby/$version
+
+function download() {
+  url="${urls[$version]}"
+
+  # Disable exit on command failure so we can provide better error messages
+  set +e
+
+  if [[ -z $url ]]; then
+    echo " !     jruby[ruby]:: No url for version $version"
+    exit 1
+  fi
+
+  echo "       jruby[ruby]:: Downloading $url"
+  status=$(curl -sL -f -w "%{http_code}" -o /tmp/ruby.tar.gz $url)
+
+  if [[ $status -ge 300 ]]; then
+    echo " !     jruby[ruby]:: Server returned HTTP $status"
+    exit 1
+  fi
+
+  # Fetch the checksum from checksums above.
+  checksum="${checksums[$version]}"
+
+  if [[ -z $checksum ]]; then
+    echo " !     jruby[ruby]:: No checksum for version $version"
+    exit 1
+  fi
+
+  # Verify the SHA256 checksum for the source
+  echo "$checksum /tmp/ruby.tar.gz" | sha256sum --status -c -
+
+  # Ensure the checksum passed
+  retVal=$?
+  if [[ $retVal -ne 0 ]]; then
+    echo " !     jruby[ruby]:: Downloaded source failed checksum"
+    exit $retVal
+  fi
+
+  # Reenable exit on failure
+  set -e
+}
+
+function compile() {
+  set +e
+
+  echo "       jruby[ruby]:: Compiling $version"
+  (
+    # Only applies to this sub-shell
+    set -e
+
+    # Logs for the sub-shell go to /tmp/jemalloc.log for printing in case of an
+    # error.
+    exec > /tmp/ruby.log 2>&1
+
+    # Extract straight to cached bundle
+    rm -rf $bundle && mkdir -p $bundle
+
+    # Extract the source 
+    tar --strip-components=1 -xf /tmp/ruby.tar.gz -C $bundle
+
+    # Prune
+    rm -rf $bundle/samples
+  )
+
+  retVal=$?
+  if [[ $retVal -ne 0 ]]; then
+    echo " !     jruby[ruby]:: Failed to compile ruby"
+    cat /tmp/ruby.log
+
+    exit $retVal
+  fi
+
+  # Reenable exit on failure
+  set -e
+}
+
+# Check if this version of ruby is in the cache and download it if it
+# doesn't exist.
+if [[ ! -d $bundle ]]; then
+  echo "-----> jruby[ruby]:: Installing $version from source"
+
+  download
+  compile
+else
+  echo "-----> jruby[ruby]:: Installing $version from cache"
+fi
+
+rm -rf $dest && mkdir -p $dest
+cp -r $bundle -T $dest/
+# Create ruby symlink
+ln -s $dest/bin/jruby $dest/bin/ruby
+
+
+
+mkdir -p $BUILD_DIR/.profile.d
+
+#cat > $BUILD_DIR/.profile.d/ruby.sh <<EOF
+#export JAVA_HOME=\$HOME/vendor/java
+#export PATH=\$JAVA_HOME/bin:\$PATH
+#export LD_LIBRARY_PATH=\$JAVA_HOME/lib/server:\$LD_LIBRARY_PATH
+#EOF
+
+echo "-----> jruby[ruby]:: Done"
+
+echo "VARS"
+echo export JAVA_HOME=$JAVA_HOME
+echo export LD_LIBRARY_PATH=$LD_LIBRARY_PATH
+echo export PATH=$dest/bin:$PATH

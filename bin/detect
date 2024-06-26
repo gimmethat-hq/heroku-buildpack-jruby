@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 # bin/detect <build-dir>
 
-echo "Java" && exit 0
+echo "Java-JRuby" && exit 0
