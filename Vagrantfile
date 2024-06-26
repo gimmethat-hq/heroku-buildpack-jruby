@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 Vagrant.configure('2') do |config|
-  config.vm.box = 'bento/ubuntu-22.04'
+  config.vm.box = 'bento/ubuntu-24.04'
 
   # Approximate a heroku 1x dyno: 4 processors, and 1024m of memory
   config.vm.provider 'virtualbox' do |v|

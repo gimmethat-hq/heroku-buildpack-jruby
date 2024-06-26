@@ -2,7 +2,7 @@
 # bin/compile <build-dir> <cache-dir> <env-dir>
 
 # testing:
-# rm -rf /vagrant/test && mkdir -p /vagrant/test/build /vagrant/test/cache /vagrant/test/env
+# rm /vagrant/export && rm -rf /vagrant/test && mkdir -p /vagrant/test/build /vagrant/test/cache /vagrant/test/env
 # ./bin/compile /vagrant/test/build /vagrant/test/cache /vagrant/test/env
 
 set -e
