@@ -122,7 +122,7 @@ function install_gems() {
 
     # Logs for the sub-shell go to /tmp/blaa.log for printing in case of an
     # error.
-    # exec > /tmp/gems.log 2>&1
+    exec > /tmp/gems.log 2>&1
 
     # Ensure Ruby is on PATH
     PATH=$dest/bin:$PATH
@@ -144,7 +144,7 @@ function install_gems() {
   retVal=$?
   if [[ $retVal -ne 0 ]]; then
     echo " !     jruby[ruby]:: Failed to install gems"
-    # cat /tmp/gems.log
+    cat /tmp/gems.log
 
     exit $retVal
   fi
@@ -167,7 +167,9 @@ fi
 rm -rf $dest && mkdir -p $dest
 cp -r $bundle -T $dest/
 # Create ruby symlink
-ln -s $dest/bin/jruby $dest/bin/ruby
+cd $dest/bin
+ln -s jruby ruby
+cd -
 
 install_gems
 
