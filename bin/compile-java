@@ -11,6 +11,7 @@ set -e
 declare -A urls=(
   ['semeru-22.0.1+8']='https://github.com/ibmruntimes/semeru22-binaries/releases/download/jdk-22.0.1%2B8_openj9-0.45.0/ibm-semeru-open-jdk_x64_linux_22.0.1_8_openj9-0.45.0.tar.gz'
   ['semeru-22.0.2+9']='https://github.com/ibmruntimes/semeru22-binaries/releases/download/jdk-22.0.2%2B9_openj9-0.46.0/ibm-semeru-open-jdk_x64_linux_22.0.2_9_openj9-0.46.0.tar.gz'
+  ['semeru-23+37']='https://github.com/ibmruntimes/semeru23-binaries/releases/download/jdk-23%2B37_openj9-0.47.0/ibm-semeru-open-jdk_x64_linux_23_37_openj9-0.47.0.tar.gz'
   ['zulu-22.0.1+8']='https://cdn.azul.com/zulu/bin/zulu22.30.13-ca-jdk22.0.1-linux_x64.tar.gz'
 )
 
@@ -18,6 +19,7 @@ declare -A urls=(
 declare -A checksums=(
   ['semeru-22.0.1+8']='6e54d984bc0c058ffb7a604810dfffba210d79e12855e5c61e9295fedeff32db'
   ['semeru-22.0.2+9']='b644d099fdacf660c627c6fda09ee5d680611f3195f8cebc1588b410e85cc9f0'
+  ['semeru-23+37']='95e1116a38567fa5b1799045f05d95bd23f419ff5c0baa2100d88f113a2cb48b'
   ['zulu-22.0.1+8']='993d91062c631d10508475f7b112724fa8136704ec1412d5cc1f93ddda1eddb0'
 )
 
