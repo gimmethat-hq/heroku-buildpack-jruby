@@ -24,7 +24,7 @@ declare -A checksums=(
 )
 
 # NOTE Heroku java agent url, stored in assets
-# https://repo1.maven.org/maven2/com/heroku/agent/heroku-java-metrics-agent/4.0.2/heroku-java-metrics-agent-4.0.2.jar
+# https://repo1.maven.org/maven2/com/heroku/agent/heroku-java-metrics-agent/4.0.3/heroku-java-metrics-agent-4.0.3.jar
 
 # Default version
 version="semeru-22.0.2+9"
