@@ -29,6 +29,8 @@ declare -A checksums=(
 # Default version
 version="semeru-22.0.2+9"
 
+echo "-----> jruby[java]: buildpack 1"
+
 # Read version from system.properties file if available
 if [ -f $BUILD_DIR/system.properties ]; then
   version=$(cat $BUILD_DIR/system.properties | grep java.runtime.version | cut -d= -f2)
