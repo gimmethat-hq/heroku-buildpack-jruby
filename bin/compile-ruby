@@ -8,6 +8,7 @@ declare -A urls=(
   ['jruby-9.4.7.0']='https://repo1.maven.org/maven2/org/jruby/jruby-dist/9.4.7.0/jruby-dist-9.4.7.0-bin.tar.gz'
   ['jruby-9.4.8.0']='https://repo1.maven.org/maven2/org/jruby/jruby-dist/9.4.8.0/jruby-dist-9.4.8.0-bin.tar.gz'
   ['jruby-9.4.9.0']='https://repo1.maven.org/maven2/org/jruby/jruby-dist/9.4.9.0/jruby-dist-9.4.9.0-bin.tar.gz'
+  ['jruby-9.4.12.0']='https://repo1.maven.org/maven2/org/jruby/jruby-dist/9.4.12.0/jruby-dist-9.4.12.0-bin.tar.gz'
 )
 
 # SHA256 checksums of different sources
@@ -15,6 +16,7 @@ declare -A checksums=(
   ['jruby-9.4.7.0']='f1c39f8257505300a528ff83fe4721fbe61a855abb25e3d27d52d43ac97a4d80'
   ['jruby-9.4.8.0']='347b6692bd9c91c480a45af25ce88d77be8b6e4ac4a77bc94870f2c5b54bc929'
   ['jruby-9.4.9.0']='8d64736e66a3c0e1e1ea813b6317219c5d43769e5d06a4417311e2baa8b40ef7'
+  ['jruby-9.4.12.0']='05c5d203d6990c92671cc42f57d2fa1c1083bbfd16fa7023dc5848cdb8f0aa2e'
 )
 
 # Read version from .ruby-version file
