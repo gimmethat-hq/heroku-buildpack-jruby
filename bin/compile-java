@@ -35,7 +35,7 @@ declare -A checksums=(
 # Default version
 version="semeru-23.0.2+7"
 
-echo "-----> jruby[java]: buildpack 2025-01-19-01"
+echo "-----> jruby[java]: buildpack 2025-01-19-02"
 
 # Read version from system.properties file if available
 if [ -f $BUILD_DIR/system.properties ]; then
