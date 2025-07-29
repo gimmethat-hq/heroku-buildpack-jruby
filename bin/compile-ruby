@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 # bin/compile <build-dir> <cache-dir> <env-dir>
 
+# testing:
+# rm -rf /vagrant/test && mkdir -p /vagrant/test/build /vagrant/test/cache /vagrant/test/env
+# echo 'jruby-10.0.1.0' > /vagrant/test/build/.ruby-version
+# echo "2.7.1" > /vagrant/test/build/.bundler-version
+# ./bin/compile /vagrant/test/build /vagrant/test/cache /vagrant/test/env
+
 set -e
 
 # Urls of different sources
@@ -9,6 +15,7 @@ declare -A urls=(
   ['jruby-9.4.8.0']='https://repo1.maven.org/maven2/org/jruby/jruby-dist/9.4.8.0/jruby-dist-9.4.8.0-bin.tar.gz'
   ['jruby-9.4.9.0']='https://repo1.maven.org/maven2/org/jruby/jruby-dist/9.4.9.0/jruby-dist-9.4.9.0-bin.tar.gz'
   ['jruby-9.4.12.0']='https://repo1.maven.org/maven2/org/jruby/jruby-dist/9.4.12.0/jruby-dist-9.4.12.0-bin.tar.gz'
+  ['jruby-10.0.1.0']='https://repo1.maven.org/maven2/org/jruby/jruby-dist/10.0.1.0/jruby-dist-10.0.1.0-bin.tar.gz'
 )
 
 # SHA256 checksums of different sources
@@ -17,6 +24,7 @@ declare -A checksums=(
   ['jruby-9.4.8.0']='347b6692bd9c91c480a45af25ce88d77be8b6e4ac4a77bc94870f2c5b54bc929'
   ['jruby-9.4.9.0']='8d64736e66a3c0e1e1ea813b6317219c5d43769e5d06a4417311e2baa8b40ef7'
   ['jruby-9.4.12.0']='05c5d203d6990c92671cc42f57d2fa1c1083bbfd16fa7023dc5848cdb8f0aa2e'
+  ['jruby-10.0.1.0']='22174ed408aa19340fc3c609b67f5a83374539ecc50053153d60f6e1f81faa9d'
 )
 
 # Read version from .ruby-version file
@@ -170,9 +178,11 @@ fi
 
 rm -rf $dest && mkdir -p $dest
 cp -r $bundle -T $dest/
-# Create ruby symlink
+# Create ruby symlink, but JRuby 10.0.1.0 already has ruby, so only create if needed (for older)
 cd $dest/bin
-ln -s jruby ruby
+if [[ ! -e ruby ]]; then
+  ln -s jruby ruby
+fi
 cd -
 
 install_gems
