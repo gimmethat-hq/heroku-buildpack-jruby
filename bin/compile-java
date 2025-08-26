@@ -14,6 +14,7 @@ declare -A urls=(
   ['semeru-23.0.0+37']='https://github.com/ibmruntimes/semeru23-binaries/releases/download/jdk-23%2B37_openj9-0.47.0/ibm-semeru-open-jdk_x64_linux_23_37_openj9-0.47.0.tar.gz'
   ['semeru-23.0.1+11']='https://github.com/ibmruntimes/semeru23-binaries/releases/download/jdk-23.0.1%2B11_openj9-0.48.0/ibm-semeru-open-jdk_x64_linux_23.0.1_11_openj9-0.48.0.tar.gz'
   ['semeru-23.0.2+7']='https://github.com/ibmruntimes/semeru23-binaries/releases/download/jdk-23.0.2%2B7_openj9-0.49.0/ibm-semeru-open-jdk_x64_linux_23.0.2_7_openj9-0.49.0.tar.gz'
+  ['semeru-24.0.2+12']='https://github.com/ibmruntimes/semeru24-binaries/releases/download/jdk-24.0.2%2B12_openj9-0.54.0/ibm-semeru-open-jdk_x64_linux_24.0.2_12_openj9-0.54.0.tar.gz'
   ['zulu-22.0.1+8']='https://cdn.azul.com/zulu/bin/zulu22.30.13-ca-jdk22.0.1-linux_x64.tar.gz'
 )
 
@@ -24,6 +25,7 @@ declare -A checksums=(
   ['semeru-23.0.0+37']='95e1116a38567fa5b1799045f05d95bd23f419ff5c0baa2100d88f113a2cb48b'
   ['semeru-23.0.1+11']='2aa3cc78feab5cf1c21a830797694c9b8b7898072a40c252f442b832117a3809'
   ['semeru-23.0.2+7']='76ba23aefc68b2d3838895cf7dedc69a4a28fa3b6cdbff3cae3078b550404c1c'
+  ['semeru-24.0.2+12']='480845cb69ef0d7a33ff70e28bbdf882c27f764bd76bc905f5fa40934d5a0c06'
   ['zulu-22.0.1+8']='993d91062c631d10508475f7b112724fa8136704ec1412d5cc1f93ddda1eddb0'
 )
 
@@ -33,7 +35,7 @@ declare -A checksums=(
 # https://repo1.maven.org/maven2/com/heroku/agent/heroku-java-metrics-agent/4.0.3/heroku-java-metrics-agent-4.0.3.jar
 
 # Default version
-version="semeru-23.0.2+7"
+version="semeru-24.0.2+12"
 
 echo "-----> jruby[java]: buildpack 2025-01-19-02"
 
