@@ -16,7 +16,6 @@ declare -A urls=(
   ['semeru-23.0.2+7']='https://github.com/ibmruntimes/semeru23-binaries/releases/download/jdk-23.0.2%2B7_openj9-0.49.0/ibm-semeru-open-jdk_x64_linux_23.0.2_7_openj9-0.49.0.tar.gz'
   ['semeru-24.0.2+12']='https://github.com/ibmruntimes/semeru24-binaries/releases/download/jdk-24.0.2%2B12_openj9-0.54.0/ibm-semeru-open-jdk_x64_linux_24.0.2_12_openj9-0.54.0.tar.gz'
   ['semeru-25.0.0-m2+36']='https://github.com/ibmruntimes/semeru25-binaries/releases/download/jdk-25%2B36_openj9-0.55.0-m2/ibm-semeru-open-jdk_x64_linux_25_36_openj9-0.55.0-m2.tar.gz'
-  ['zulu-22.0.1+8']='https://cdn.azul.com/zulu/bin/zulu22.30.13-ca-jdk22.0.1-linux_x64.tar.gz'
 )
 
 # SHA256 checksums of different sources
@@ -28,7 +27,6 @@ declare -A checksums=(
   ['semeru-23.0.2+7']='76ba23aefc68b2d3838895cf7dedc69a4a28fa3b6cdbff3cae3078b550404c1c'
   ['semeru-24.0.2+12']='480845cb69ef0d7a33ff70e28bbdf882c27f764bd76bc905f5fa40934d5a0c06'
   ['semeru-25.0.0-m2+36']='8e6fe1ebe59e8bb21d51f336d371749efda52f01c7f29f9c6d81743fb408c094'
-  ['zulu-22.0.1+8']='993d91062c631d10508475f7b112724fa8136704ec1412d5cc1f93ddda1eddb0'
 )
 
 # NOTE Heroku java agent url, stored in assets
