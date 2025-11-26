@@ -17,6 +17,7 @@ declare -A urls=(
   ['semeru-24.0.2+12']='https://github.com/ibmruntimes/semeru24-binaries/releases/download/jdk-24.0.2%2B12_openj9-0.54.0/ibm-semeru-open-jdk_x64_linux_24.0.2_12_openj9-0.54.0.tar.gz'
   ['semeru-25.0.0-m2+36']='https://github.com/ibmruntimes/semeru25-binaries/releases/download/jdk-25%2B36_openj9-0.55.0-m2/ibm-semeru-open-jdk_x64_linux_25_36_openj9-0.55.0-m2.tar.gz'
   ['semeru-25.0.0+36.0.LTS']='https://github.com/ibmruntimes/semeru25-binaries/releases/download/jdk-25%2B36_openj9-0.55.0/ibm-semeru-open-jdk_x64_linux_25_36_openj9-0.55.0.tar.gz'
+  ['semeru-25.0.1+8.0.LTS']='https://github.com/AdoptOpenJDK/semeru25-binaries/releases/download/jdk-25.0.1%2B8_openj9-0.56.0/ibm-semeru-open-jdk_x64_linux_25.0.1_8_openj9-0.56.0.tar.gz'
 )
 
 # SHA256 checksums of different sources
@@ -29,6 +30,7 @@ declare -A checksums=(
   ['semeru-24.0.2+12']='480845cb69ef0d7a33ff70e28bbdf882c27f764bd76bc905f5fa40934d5a0c06'
   ['semeru-25.0.0-m2+36']='8e6fe1ebe59e8bb21d51f336d371749efda52f01c7f29f9c6d81743fb408c094'
   ['semeru-25.0.0+36.0.LTS']='718b4cb10c95a872d63c22254e4d1879011f7fff05dde1d21af6b63d40a5bb47'
+  ['semeru-25.0.1+8.0.LTS']='827cd477c672b8280646ef5d52421fef8d0c8f24bf43c2a83031fadaf28dad19'
 )
 
 # NOTE Heroku java agent url, stored in assets
@@ -37,9 +39,9 @@ declare -A checksums=(
 # https://repo1.maven.org/maven2/com/heroku/agent/heroku-java-metrics-agent/4.0.3/heroku-java-metrics-agent-4.0.3.jar
 
 # Default version
-version="semeru-25.0.0+36.0.LTS"
+version="semeru-25.0.1+8.0.LTS"
 
-echo "-----> jruby[java]: buildpack 2025-11-10"
+echo "-----> jruby[java]: buildpack 2025-11-26"
 
 # Read version from system.properties file if available
 if [ -f $BUILD_DIR/system.properties ]; then
