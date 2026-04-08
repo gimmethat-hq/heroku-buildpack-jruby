@@ -3,8 +3,8 @@
 
 # testing:
 # rm -rf /vagrant/test && mkdir -p /vagrant/test/build /vagrant/test/cache /vagrant/test/env
-# echo 'jruby-10.0.4.0' > /vagrant/test/build/.ruby-version
-# echo "2.7.1" > /vagrant/test/build/.bundler-version
+# echo 'jruby-10.0.5.0' > /vagrant/test/build/.ruby-version
+# echo "2.7.2" > /vagrant/test/build/.bundler-version
 # ./bin/compile /vagrant/test/build /vagrant/test/cache /vagrant/test/env
 
 set -e
@@ -18,6 +18,7 @@ declare -A urls=(
   ['jruby-10.0.1.0']='https://repo1.maven.org/maven2/org/jruby/jruby-dist/10.0.1.0/jruby-dist-10.0.1.0-bin.tar.gz'
   ['jruby-10.0.2.0']='https://repo1.maven.org/maven2/org/jruby/jruby-dist/10.0.2.0/jruby-dist-10.0.2.0-bin.tar.gz'
   ['jruby-10.0.4.0']='https://repo1.maven.org/maven2/org/jruby/jruby-dist/10.0.4.0/jruby-dist-10.0.4.0-bin.tar.gz'
+  ['jruby-10.0.5.0']='https://repo1.maven.org/maven2/org/jruby/jruby-dist/10.0.5.0/jruby-dist-10.0.5.0-bin.tar.gz'
 )
 
 # SHA256 checksums of different sources
@@ -28,6 +29,7 @@ declare -A checksums=(
   ['jruby-9.4.12.0']='05c5d203d6990c92671cc42f57d2fa1c1083bbfd16fa7023dc5848cdb8f0aa2e'
   ['jruby-10.0.1.0']='22174ed408aa19340fc3c609b67f5a83374539ecc50053153d60f6e1f81faa9d'
   ['jruby-10.0.4.0']='d0260ebc753a5e9ae49be1eec0e4eec907aaf2b7184faaafc879b0ec3253ca24'
+  ['jruby-10.0.5.0']='6b3aa0340bd60a2b131e12490bb498c45359d9c91e477f5760c3aa18e37d1988'
 )
 
 # Read version from .ruby-version file

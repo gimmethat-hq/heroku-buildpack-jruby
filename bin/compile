@@ -3,8 +3,8 @@
 
 # testing:
 # rm -rf /vagrant/test && mkdir -p /vagrant/test/build /vagrant/test/cache /vagrant/test/env
-# echo 'jruby-10.0.4.0' > /vagrant/test/build/.ruby-version
-# echo "2.7.1" > /vagrant/test/build/.bundler-version
+# echo 'jruby-10.0.5.0' > /vagrant/test/build/.ruby-version
+# echo "2.7.2" > /vagrant/test/build/.bundler-version
 # ./bin/compile /vagrant/test/build /vagrant/test/cache /vagrant/test/env
 # /vagrant/test/build/vendor/java/bin/java --version
 # JAVA_HOME=/vagrant/test/build/vendor/java /vagrant/test/build/vendor/ruby/bin/ruby --version
