@@ -45,9 +45,9 @@ declare -A checksums=(
 # https://repo1.maven.org/maven2/com/heroku/agent/heroku-java-metrics-agent/4.0.3/heroku-java-metrics-agent-4.0.3.jar
 
 # Default version
-version="semeru-26.0.0+35"
+version="semeru-26.0.1+8"
 
-echo "-----> jruby[java]: buildpack 2026-04-08"
+echo "-----> jruby[java]: buildpack 2026-05-11"
 
 # Read version from system.properties file if available
 if [ -f $BUILD_DIR/system.properties ]; then
